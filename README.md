@@ -62,3 +62,81 @@ kafka-console-consumer --formatter "kafka.coordinator.group.GroupMetadataManager
 ```
 kafka-run-class.sh kafka.admin.ConsumerGroupCommand --bootstrap-server kafka:9092 --group my-group --describe
 ```
+
+
+# Setting up Kafka Cluster
+
+
+Single Machine [127.0.0.1]
+Broker 0
+.../etc/kafka/server.properties
+
+    Port => 9092
+    broker id: 0
+    log.dir /tmp/kafka.logs
+    
+
+Broker 1
+.../etc/kafka/server1.properties
+
+     
+    broker.id=1    
+    listeners=PLAINTEXT://:9093
+    log.dirs=/tmp/kafka-logs-1
+
+    
+
+Broker 2
+.../etc/kafka/server2.properties
+
+    Port => 9094
+    broker id: 2
+    log.dir /tmp/kafka.logs-2
+    
+    
+
+
+Broker 3
+.../etc/kafka/server3.properties
+
+    Port => 9095
+    broker id: 3
+    log.dir /tmp/kafka.logs-3
+    
+    
+
+# MAC
+
+
+bin/kafka-server-start etc/kafka/server-1.properties
+bin/kafka-server-start etc/kafka/server-2.properties
+bin/kafka-server-start etc/kafka/server-3.properties
+
+
+
+1. Producer/Consumer connect to 12.34.56.78 broker
+2. Producer/Consumer send meta data request to get all brokers based on topic
+3. Broker responds with avaialble lead brokers (partition)
+        Broker 1 (P0, LEAD) 12.34.56.80 
+        Broker 2 (P2, LEAD)12.34.56.82
+        Broker 3 (P3, LEAD) 12.34.56.85
+
+        ISR (Brokers)
+4. Producer/Consumer connect to respective brokers 
+5. Send message to specific broker 12.34.56.80 
+
+
+
+KEYS = [ "OTP", "AD","ALERT", "BANK","TV","Mobile"]
+PARTITION 4
+
+HASH(OTP) = 10 % 4 => 2 PARTITION ID
+HASH(OTP) = 10 % 4 => 2  PARTITION ID
+HASH(AD) = 8 % 4 => 0 PARTITION
+ALERT = 7 % 4 => 3 PARITION
+
+
+
+
+
+
