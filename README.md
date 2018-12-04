@@ -136,7 +136,61 @@ HASH(AD) = 8 % 4 => 0 PARTITION
 ALERT = 7 % 4 => 3 PARITION
 
 
+## Rebalanced Consumers with in Consumer Group
 
 
+10K per second
+1000K per second (festive)
+10K per second
 
+Brokers (B0, B1, B2, ..B9), ...B100 
+Topic 
+Partition (4, P0, P1, P2, P3)
+Replication factor 3 
 
+Consumer Group (OrderGroup)  (10K per second)
+       Consumer 1 (3333 per second)
+       Consumer 2 (3333 per second)
+       Consumer 3 (3333 per second)
+       
+       .....
+       ...
+       Consumer 100 (3333 per second)
+   
+Scale down
+   Consumer Group (OrderGroup)  (10K per second)
+
+   Consumer 1 (3333 per second)
+         Consumer 2 (3333 per second)
+         Consumer 3 (3333 per second)
+         
+         
+1. consumer send request to localhost:9092,localhost:9093
+2.1 get meta data 
+2.2 Consumer susbcribe for topic, get meta data about all brokers for given topic
+3. 4 brokers avaialble (3 replicas)
+4. Target a spcific broker in sync replicas for read request
+     Auto rebalancing happening - Powered by ZooKeeper
+     
+     1. 1 Consumer, 4 partition (each has one partition)
+     
+     scale up
+     2. 2 Consumers, 4 partition (two consumers each from 2 partition)
+       (no need to do rebalance)
+     3. 4 Consumers, 4 partition (1 consumer to 1 broker)
+     
+     scale down
+     4. 1 Consumer, 4 brokers (each has one partition)
+          
+            
+            
+     5 Consumers 4 paritions
+     
+     1 consumar -> 1 partition
+     
+     1 consumer idle
+     
+     
+     100 Consumers 4 paritions
+     
+     96 consumer idle

@@ -28,7 +28,11 @@ public class SMSProducer {
             "ALERT",
             "BANK",
             "TV",
-            "Mobile"
+            "Mobile",
+            "Cat1",
+            "cat2",
+            "cat3",
+            "cat4"
     };
 
     public static void main(String[] args) throws  Exception {
@@ -48,21 +52,22 @@ public class SMSProducer {
         // Key as string, value as string
         Producer<String, String> producer = new KafkaProducer<>(props);
 
+        for (int i = 0; i < 100; i++) {
+            for (String category : categories) {
+                // producer record, topic, key (category), value (message)
+                // send message, not waiting for ack
+                String key = category;
 
-        for (String category:categories) {
-            // producer record, topic, key (category), value (message)
-            // send message, not waiting for ack
-            String key = category;
+                String message = "Message " + key + " : " + String.valueOf(round(random() * 1000));
 
-            String message = "Message " + key  + " : " + String.valueOf(round(random() * 1000));
+                // Sync await,
+                RecordMetadata meta = producer
+                        .send(new ProducerRecord<>(TOPIC, key, message))
+                        .get();
 
-            // Sync await,
-            RecordMetadata meta = producer
-                    .send(new ProducerRecord<>(TOPIC, key, message))
-                    .get();
-
-            System.out.printf("SMS %s sent\n", message);
-            Thread.sleep(10); // Demo only,
+                System.out.printf("SMS %s sent\n", message);
+                Thread.sleep(3000); // Demo only,
+            }
         }
 
         producer.close();
