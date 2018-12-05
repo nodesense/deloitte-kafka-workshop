@@ -1,3 +1,5 @@
+// EmailProducer.java
+
 package ai.nodesense.workshop.email;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -29,7 +31,7 @@ public class EmailProducer {
         props.put(BUFFER_MEMORY_CONFIG, 33554432);
         props.put(KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 
-        props.put(VALUE_SERIALIZER_CLASS_CONFIG, JsonPOJOSerializer.class);
+        props.put(VALUE_SERIALIZER_CLASS_CONFIG, EmailJsonSerializer.class);
 
         //props.put(VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 
@@ -38,13 +40,16 @@ public class EmailProducer {
         long t1 = System.currentTimeMillis();
 
         int i = 0;
-        for(; i < 10; i++) {
+        for(; i < 1; i++) {
 
             String key = String.valueOf(round(random() * 1000));
 
             Email email = EmailGenerator.createEmail();
 
 
+            // Serializer is called by send method
+            // that converts email object to json bytes
+            System.out.println("Sending email ");
             producer.send(new ProducerRecord<>(TOPIC, key, email));
         }
         System.out.println("Sent " + i + " emails " + (System.currentTimeMillis() - t1 + " ms"));

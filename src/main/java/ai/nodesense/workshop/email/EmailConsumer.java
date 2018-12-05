@@ -1,3 +1,4 @@
+// EmailConsumer.java
 package ai.nodesense.workshop.email;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -19,17 +20,13 @@ public class EmailConsumer {
 
         Properties props = new Properties();
         props.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        props.put(GROUP_ID_CONFIG, "a");
+        props.put(GROUP_ID_CONFIG, "email-consumer");
         props.put(ENABLE_AUTO_COMMIT_CONFIG, "true");
         props.put(AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
         props.put(SESSION_TIMEOUT_MS_CONFIG, "30000");
         props.put(KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put(VALUE_DESERIALIZER_CLASS_CONFIG,  JsonPOJODeserializer.class);
-       // props.put(VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put(VALUE_DESERIALIZER_CLASS_CONFIG,  EmailJsonDeserializer.class);
 
-//        KafkaConsumer<String, SMS> consumer = new KafkaConsumer<>(props, new StringDeserializer(),
-//                                                                         new JsonPOJODeserializer());
-//
 
         KafkaConsumer<String, Email> consumer = new KafkaConsumer<>(props);
 
@@ -43,9 +40,13 @@ public class EmailConsumer {
             if (records.count() == 0)
                 continue;
 
-            for (ConsumerRecord<String, Email> record : records)
-                System.out.printf("offset= %d, key= %s, value= %s\n", record.offset(), record.key(), record.value());
+            for (ConsumerRecord<String, Email> record : records) {
+                 Email email = record.value();
 
+                System.out.printf("Email received %s %s %s", email.getId(), email.getSubject(), email.getContent());
+
+                System.out.printf("offset= %d, key= %s, value= %s\n", record.offset(), record.key(), record.value());
+            }
         }
     }
 }

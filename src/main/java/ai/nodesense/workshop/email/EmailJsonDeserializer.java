@@ -1,3 +1,4 @@
+// EmailJsonDeserializer.java
 package ai.nodesense.workshop.email;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +8,11 @@ import org.apache.kafka.common.serialization.Deserializer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class JsonPOJODeserializer implements Deserializer<Email> {
+
+// Convert the serialized json bytes   to Email Object
+// Consumer
+// consumer.poll().. pull kafka msg, then convert the content to Email object
+public class EmailJsonDeserializer implements Deserializer<Email> {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     private Class<Email> tClass = Email.class;
@@ -15,7 +20,8 @@ public class JsonPOJODeserializer implements Deserializer<Email> {
     /**
      * Default constructor needed by Kafka
      */
-    public JsonPOJODeserializer() {
+    public EmailJsonDeserializer() {
+        System.out.println("EmailJsonDeserializer created");
     }
 
     @SuppressWarnings("unchecked")
@@ -27,21 +33,23 @@ public class JsonPOJODeserializer implements Deserializer<Email> {
 
     @Override
     public Email deserialize(String topic, byte[] bytes) {
+        System.out.println("EmailJsonDeserializer deserialize called ");
         if (bytes == null)
             return null;
 
-        Email data;
+         Email email;
         try {
-            System.out.println("Bytes " +  new String(bytes, StandardCharsets.UTF_8));
+            System.out.println("Bytes received " +  new String(bytes, StandardCharsets.UTF_8));
             //System.out.println("Class is " + SMS.toString());
 
-            data = objectMapper.readValue(bytes, Email.class);
+            // convert bytes to Email Object
+            email = objectMapper.readValue(bytes, Email.class);
         } catch (Exception e) {
             System.out.println("Error while parsing ");
             throw new SerializationException(e);
         }
 
-        return data;
+        return email;
     }
 
     @Override

@@ -1,3 +1,4 @@
+// Email.java
 package ai.nodesense.workshop.email;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,13 +9,10 @@ import lombok.*;
 import java.io.IOException;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Data;
 import lombok.Builder;
 
-import java.io.IOException;
+// Plain object, no kafka
 
 @Data
 @NoArgsConstructor
@@ -22,12 +20,14 @@ import java.io.IOException;
 @Builder(builderClassName = "EmailBuilder")
 @JsonDeserialize(builder = Email.EmailBuilder.class)
 @ToString
-public class Email {
+public class Email   {
+    // public getter/setter created by lombok
     private String id;
     private String from;
     private String to;
     private String subject;
     private String content;
+
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class EmailBuilder {
@@ -45,3 +45,4 @@ public class Email {
     }
 
 }
+
