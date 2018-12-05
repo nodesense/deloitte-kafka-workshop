@@ -312,3 +312,18 @@ Good CPU (SPARK) - 10 Computers (16 core), 48 RAM
      --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
      --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
 ```
+
+# Query KAFKA Schema registry
+
+http://localhost:8081/subjects/
+http://localhost:8081/subjects/invoices-key/versions
+http://localhost:8081/subjects/invoices-value/versions
+http://localhost:8081/subjects/invoices-value/versions/1
+
+
+
+# For order and invoice
+
+    kafka-console-consumer --bootstrap-server localhost:9092 --topic invoices
+    kafka-console-consumer --bootstrap-server localhost:9092 --topic orders
+        

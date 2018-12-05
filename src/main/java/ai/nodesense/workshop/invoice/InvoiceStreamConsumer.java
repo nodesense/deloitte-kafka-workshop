@@ -19,6 +19,7 @@ import org.apache.kafka.streams.kstream.*;
 import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class InvoiceStreamConsumer {
 
@@ -86,8 +87,12 @@ public class InvoiceStreamConsumer {
                 (key, invoice) -> invoice.getState() // return a key (state)
         );
 
+
+
+
         // KEY, VALUE, table used for aggregation
-         KTable<String, Long> stateGroupCount = stateGroupStream.count();
+         KTable<String, Long> stateGroupCount = stateGroupStream
+                                                .count();
         stateGroupCount.toStream().to("streams-state-invoices-count", Produced.with(stringSerde, longSerde));
 
 
