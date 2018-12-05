@@ -53,6 +53,8 @@ public class InvoiceStreamConsumer {
 
         Properties props = getConfiguration();
 
+        //Serdes ==> SerializationDeserialization
+
         final Serde<String> stringSerde = Serdes.String();
         final Serde<Long> longSerde = Serdes.Long();
 
@@ -67,13 +69,68 @@ public class InvoiceStreamConsumer {
 
         // In the subsequent lines we define the processing topology of the Streams application.
         final StreamsBuilder builder = new StreamsBuilder();
-        final KStream<String, Invoice> productInvoiceStream = builder.stream("product.orders");
+        // a Stream is a consumer
+        final KStream<String, Invoice> invoiceStream = builder.stream("invoices");
+
+        invoiceStream.foreach(new ForeachAction<String, Invoice>() {
+            @Override
+            public void apply(String key, Invoice invoice) {
+                System.out.println("Invoice Key " + key + " Invalue id  " + invoice.getId() + ":" + invoice.getAmount() );
+                System.out.println("received invoice " + invoice);
+            }
+        });
+
+        KStream<String, Invoice> invoiceQtyGt3Stream = invoiceStream
+                                                      .filter((key, invoice) ->  invoice.getQty() > 3);
+
+        KStream<String, Invoice> invoiceQtyGt3WithDiscountStream = invoiceQtyGt3Stream
+                .map((key, invoice)-> { // transform
+                    // immutable
+                    invoice.setAmount(invoice.getAmount() - 100); //mutatble, bad one
+                    return new KeyValue<>(key,invoice);
+                });
+
+        // Dropping invoice object, return key,value (string)
+        KStream<String, String> invoiceQtyGt3WithDiscountKeyValueStream = invoiceQtyGt3WithDiscountStream
+                .map((key, invoice)-> { // transform
+                    return new KeyValue<>(key,invoice.getAmount().toString());
+                });
+
+        // publish to a new topic
+        // (id, 100/150)
+        invoiceQtyGt3WithDiscountKeyValueStream
+                .to("streams-qty-amount-str", Produced.with(stringSerde, stringSerde));
 
 
+        // Dropping invoice object, return key,value (string)
+        KStream<String, Long> invoiceQtyGt3WithDiscountKeyValueLongStream = invoiceQtyGt3WithDiscountStream
+                .map((key, invoice)-> { // transform
+                    return new KeyValue<>(key,invoice.getAmount().longValue());
+                });
+
+        // publish to a new topic
+        // (id, 100/150)
+        invoiceQtyGt3WithDiscountKeyValueLongStream
+                .to("streams-qty-amount-long", Produced.with(stringSerde, longSerde));
+
+
+
+        invoiceQtyGt3WithDiscountStream.foreach(new ForeachAction<String, Invoice>() {
+            @Override
+            public void apply(String key, Invoice invoice) {
+                System.out.println("Invoice Qty > 3 & - 100 " + key + " In value id  " + invoice.getId() + ":" + invoice.getAmount() );
+
+            }
+        });
+
+        // collection of streams put together
         final KafkaStreams streams = new KafkaStreams(builder.build(), props);
 
-        streams.cleanUp();
+
+        // streams.cleanUp();
         streams.start();
+
+        System.out.println("Stream started");
 
         // Add shutdown hook to respond to SIGTERM and gracefully close Kafka Streams
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));

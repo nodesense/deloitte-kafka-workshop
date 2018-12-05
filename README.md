@@ -206,6 +206,17 @@ kafka-run-class kafka.tools.GetOffsetShell \
  # Create models using avro tool command line
 ``` 
 java -jar lib/avro-tools-1.8.2.jar compile schema src/main/resources/avro/order.avsc  src/main/java```
+```
+
+
+
+    kafka-console-consumer --bootstrap-server localhost:9092 --topic streams-qty-amount-str
+ 
+
+kafka-console-consumer --bootstrap-server localhost:9092 --topic streams-qty-amount-long --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+ 
+
+
 
 COMPACTION
 
@@ -228,4 +239,20 @@ kafka-topics  --create --zookeeper localhost:2181 \
                                   --config segment.ms=100 \
                                   --config delete.retention.ms=100
                                                                               
-                                                                              
+                
+Run zookeeper shell                            
+
+bin/zkCli.sh -server 127.0.0.1:2181
+> help
+> ls / 
+>  create /zk_test my_data
+> get /zk_test
+set /zk_test junk
+delete /zk_test
+ls /brokers/ids
+get /brokers/ids/0
+ls /brokers/topics
+
+zookeeper-shell localhost:2181 
+
+<<< "ls /brokers/ids"

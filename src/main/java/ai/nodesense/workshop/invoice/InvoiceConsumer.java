@@ -58,6 +58,8 @@ public class InvoiceConsumer {
                         record.offset(),
                         record.key(),
                         record.value());
+
+
             }
         }
     }

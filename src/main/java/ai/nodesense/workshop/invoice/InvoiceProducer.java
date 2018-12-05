@@ -20,7 +20,7 @@ public class InvoiceProducer {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
-        long events = 10;
+        long events = 1000;
         // FIXME: Always check
         String schemaUrl = "http://localhost:8081"; //default
         //String schemaUrl = "http://localhost:8091";
