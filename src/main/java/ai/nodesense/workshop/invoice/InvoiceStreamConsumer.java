@@ -80,6 +80,19 @@ public class InvoiceStreamConsumer {
             }
         });
 
+
+        // Aggregation, pre-requisties for the aggregation
+        KGroupedStream<String, Invoice> stateGroupStream = invoiceStream.groupBy(
+                (key, invoice) -> invoice.getState() // return a key (state)
+        );
+
+        // KEY, VALUE, table used for aggregation
+         KTable<String, Long> stateGroupCount = stateGroupStream.count();
+        stateGroupCount.toStream().to("streams-state-invoices-count", Produced.with(stringSerde, longSerde));
+
+
+
+
         KStream<String, Invoice> invoiceQtyGt3Stream = invoiceStream
                                                       .filter((key, invoice) ->  invoice.getQty() > 3);
 

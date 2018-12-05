@@ -215,6 +215,7 @@ java -jar lib/avro-tools-1.8.2.jar compile schema src/main/resources/avro/order.
 
 kafka-console-consumer --bootstrap-server localhost:9092 --topic streams-qty-amount-long --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
  
+ 
 
 
 
@@ -256,3 +257,53 @@ ls /brokers/topics
 zookeeper-shell localhost:2181 
 
 <<< "ls /brokers/ids"
+
+
+volume - 10 GB per 1000 ms 
+         10000000 messages per 1000 ms
+
+Good CPU (Kafka) - 1 Computer (16 core), 48 RAM
+
+    stream.
+        .filter (100 ms)
+        .map (150 ms)
+        
+        .sort (2000 ms)
+        .groupBy (3000 ms)
+        .avg() (5000 ms)
+
+            10000 ms+
+
+            90% slower than the input
+
+
+Good CPU (SPARK) - 10 Computers (16 core), 48 RAM
+
+1 Machine
+
+    stream.
+        .filter (100 ms)
+        .map (150 ms)
+        .sort (2000 ms)
+        .groupBy (3000 ms)
+        .avg() (5000 ms)
+        .ml(predict)
+ 
+
+10 Machine  (SPARK)
+
+    stream.
+        .filter (10 ms)
+        .map (15 ms)
+        .sort (200 ms)
+        .groupBy (300 ms)
+        .avg() (500 ms)
+ 
+ kafka-console-consumer --bootstrap-server localhost:9092 \
+     --topic streams-state-invoices-count \
+     --from-beginning \
+     --formatter kafka.tools.DefaultMessageFormatter \
+     --property print.key=true \
+     --property print.value=true \
+     --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+     --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer

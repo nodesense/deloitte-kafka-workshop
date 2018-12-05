@@ -22,7 +22,7 @@ public class InvoiceGenerator {
     public static Invoice getNextRandomInvoice() {
 
         String categoryId = "" + customerIds[random.nextInt(customerIds.length)];
-        String stateId = "" + customerIds[random.nextInt(customerIds.length)];
+        String stateId = "" + stateIds[random.nextInt(stateIds.length)];
 
         String customerId = UUID.randomUUID().toString();
 

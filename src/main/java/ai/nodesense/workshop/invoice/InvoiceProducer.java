@@ -48,7 +48,7 @@ public class InvoiceProducer {
                                                                             invoice);
             producer.send(record).get();
             System.out.println("Sent Invoice" + invoice);
-            Thread.sleep(5000);
+            Thread.sleep(2500);
         }
 
     }
