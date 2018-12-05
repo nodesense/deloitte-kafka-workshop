@@ -1,0 +1,13 @@
+{"namespace": "ai.nodesense.workshop.models",
+ "type": "record",
+ "name": "Invoice",
+ "fields": [
+     {"name": "id", "type": "string"},
+     {"name": "qty", "type": "int"},
+     {"name": "amount", "type": "int"},
+     {"name": "customerId", "type": "string"},
+     {"name": "state", "type": "string"},
+     {"name": "country", "type": "string"},
+     {"name": "invoiceDate", "type": "long", "logicalType": "Timestamp"}
+ ]
+}

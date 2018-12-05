@@ -6,12 +6,10 @@ import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 import static java.time.Duration.ofSeconds;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
@@ -37,6 +35,12 @@ public class RebalanceSMSConsumer {
 
         // <Key as string, Value as string>
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+
+
+
+        List<PartitionInfo> partitions = consumer.partitionsFor(TOPIC);
+        System.out.println("Partitions " + partitions);
+
 
         // Subscribe for topic(s)
         consumer.subscribe(singletonList(TOPIC), new ConsumerRebalanceListener() {

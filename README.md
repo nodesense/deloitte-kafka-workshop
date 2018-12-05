@@ -194,3 +194,38 @@ Scale down
      100 Consumers 4 paritions
      
      96 consumer idle
+     
+# To know number of messages
+
+kafka-run-class kafka.tools.GetOffsetShell \
+  --broker-list localhost:9092 \
+  --topic sms --time -1 --offsets 1 | \
+   awk -F  ":" '{sum += $3} END {print sum}'
+   
+   
+ # Create models using avro tool command line
+``` 
+java -jar lib/avro-tools-1.8.2.jar compile schema src/main/resources/avro/order.avsc  src/main/java```
+
+COMPACTION
+
+
+kafka-topics --delete --zookeeper localhost:2181  --topic test
+kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test \
+                                                                              --config min.cleanable.dirty.ratio=0.01 \
+                                                                              --config cleanup.policy=compact \
+                                                                              --config segment.ms=100 \
+                                                                              --config delete.retention.ms=100
+                                                                              
+                                                                              
+                                                                              
+kafka-topics --delete --zookeeper localhost:2181  --topic test
+kafka-topics  --create --zookeeper localhost:2181 \
+                                  --partitions 1 \
+                                  --replication-factor 1 \
+                                  --topic test \
+                                  --config cleanup.policy=delete \
+                                  --config segment.ms=100 \
+                                  --config delete.retention.ms=100
+                                                                              
+                                                                              

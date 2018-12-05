@@ -1,4 +1,4 @@
-// SMSProducer.java
+// EmailProducer.java
 package ai.nodesense.workshop.greeting;
 
 // Key Value Producer
