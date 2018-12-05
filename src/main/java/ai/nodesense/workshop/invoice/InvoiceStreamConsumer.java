@@ -1,3 +1,5 @@
+// InvoiceStreamConsumer.java
+
 package ai.nodesense.workshop.invoice;
 
 import java.util.Collections;
@@ -20,9 +22,12 @@ import java.util.Properties;
 
 public class InvoiceStreamConsumer {
 
+    static  String bootstrapServers = "localhost:9092";
+    //FIXME: chance schema url
+    static String schemaUrl = "http://localhost:8081";
+
     public static Properties getConfiguration() {
-        final String bootstrapServers = "localhost:9092";
-        String schemaUrl = "http://localhost:8081";
+
 
         final Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "product-invoice-stream");
@@ -55,7 +60,7 @@ public class InvoiceStreamConsumer {
 
         // When you want to override serdes explicitly/selectively
         final Map<String, String> serdeConfig = Collections.singletonMap("schema.registry.url",
-                "http://localhost:8081");
+                schemaUrl);
         //
         InvoiceAvroSerde.configure(serdeConfig, true); // `true` for record keys
 
@@ -63,82 +68,6 @@ public class InvoiceStreamConsumer {
         // In the subsequent lines we define the processing topology of the Streams application.
         final StreamsBuilder builder = new StreamsBuilder();
         final KStream<String, Invoice> productInvoiceStream = builder.stream("product.orders");
-
-        productInvoiceStream.foreach(new ForeachAction<String, Invoice>() {
-            @Override
-            public void apply(String key, Invoice value) {
-                System.out.println("yeah " + key + " Value is  " + value );
-            }
-        });
-
-        KStream<String, Invoice> onlyGt2Stream = productInvoiceStream.filter((key, order) ->  order.getQty() > 2);
-
-        KGroupedStream<String, Invoice> categoryGroupStream = productInvoiceStream.groupBy(
-                (key, invoice) -> invoice.getState()
-        );
-
-        final KTable<String, Long> statesInvoiceCounts = categoryGroupStream.count();
-
-
-
-        statesInvoiceCounts.toStream().foreach(new ForeachAction<String, Long>() {
-            @Override
-            public void apply(String key, Long value) {
-                System.out.println("\u001B[43m" + "***Category " + key + " Count is  " + value );
-            }
-        });
-
-        statesInvoiceCounts.toStream().to("streams-category-count-output", Produced.with(stringSerde, longSerde));
-
-
-        onlyGt2Stream.foreach(new ForeachAction<String, Invoice>() {
-            @Override
-            public void apply(String key, Invoice value) {
-                System.out.println("\u001B[43m" + "yeah > 2 only " + key + " Value is  " + value );
-            }
-        });
-
-        KStream<String, Invoice>[] orderBranchesStream = productInvoiceStream.branch(
-                (key, value) -> value.getQty() <= 1, /* first predicate  */
-                (key, value) -> value.getQty() > 1 &&  value.getQty() <= 3, /* second predicate */
-                (key, value) -> true                 /* third predicate  */
-        );
-
-        orderBranchesStream[0].foreach(new ForeachAction<String, Invoice>() {
-            @Override
-            public void apply(String key, Invoice value) {
-                System.out.println("branch <= 1 only " + key + " Value is  " + value );
-            }
-        });
-
-
-        orderBranchesStream[1].foreach(new ForeachAction<String, Invoice>() {
-            @Override
-            public void apply(String key, Invoice value) {
-                System.out.println("branch > 1  & <= 3 only " + key + " Value is  " + value );
-            }
-        });
-
-        orderBranchesStream[2].foreach(new ForeachAction<String, Invoice>() {
-            @Override
-            public void apply(String key, Invoice value) {
-                System.out.println("branch others only " + key + " Value is  " + value );
-            }
-        });
-
-        /*
-        KStream<String, Integer> productOrdersQty = productOrders.mapValues(value -> value.getQty());
-
-        KStream<String, Integer> transformed = productOrders.map(
-                (key, value) -> KeyValue.pair(value.getName().toString(), value.getQty()));
-
-        transformed.foreach(new ForeachAction<String, Integer>() {
-            @Override
-            public void apply(String key, Integer value) {
-                System.out.println("Product to Qty  " + key + " Value is  " + value );
-            }
-        });
-        */
 
 
         final KafkaStreams streams = new KafkaStreams(builder.build(), props);
