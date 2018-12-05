@@ -299,6 +299,10 @@ Good CPU (SPARK) - 10 Computers (16 core), 48 RAM
         .groupBy (300 ms)
         .avg() (500 ms)
  
+ 
+ ### with formatter
+ 
+ ```bash
  kafka-console-consumer --bootstrap-server localhost:9092 \
      --topic streams-state-invoices-count \
      --from-beginning \
@@ -307,3 +311,4 @@ Good CPU (SPARK) - 10 Computers (16 core), 48 RAM
      --property print.value=true \
      --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
      --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+```
