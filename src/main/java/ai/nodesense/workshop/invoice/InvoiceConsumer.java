@@ -1,3 +1,4 @@
+// InvoiceConsumer.java
 package ai.nodesense.workshop.invoice;
 
 import ai.nodesense.workshop.models.Invoice;
@@ -18,14 +19,19 @@ public class InvoiceConsumer {
 
     public static void main(String[] args) {
 
+        // FIXME: Always check
+        String schemaUrl = "http://localhost:8081"; //default
+        //String schemaUrl = "http://localhost:8091";
+
         Properties props = new Properties();
         props.put(BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(GROUP_ID_CONFIG, "invoice-consumer-example"); // offset, etc, TODO
         props.put(ENABLE_AUTO_COMMIT_CONFIG, "true");
         props.put(AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
         props.put(SESSION_TIMEOUT_MS_CONFIG, "30000");
-        props.put(KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put(VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put(KEY_DESERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroDeserializer");
+        props.put(VALUE_DESERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroDeserializer");
+        props.put("schema.registry.url", schemaUrl);
 
         // <Key as string, Value as string>
         KafkaConsumer<String, Invoice> consumer = new KafkaConsumer<>(props);

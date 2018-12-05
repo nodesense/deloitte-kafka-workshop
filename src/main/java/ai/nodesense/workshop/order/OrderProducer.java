@@ -1,5 +1,6 @@
 package ai.nodesense.workshop.order;
 
+import ai.nodesense.workshop.models.Order;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;

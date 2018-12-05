@@ -1,3 +1,4 @@
+// InvoiceProducer.java
 package ai.nodesense.workshop.invoice;
 
 import ai.nodesense.workshop.models.Invoice;
@@ -19,8 +20,10 @@ public class InvoiceProducer {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
-        long events = 1000;
-        String schemaUrl = "http://localhost:8081";
+        long events = 10;
+        // FIXME: Always check
+        String schemaUrl = "http://localhost:8081"; //default
+        //String schemaUrl = "http://localhost:8091";
 
         Properties props = new Properties();
         // hardcoding the Kafka server URI for this example
@@ -37,12 +40,14 @@ public class InvoiceProducer {
 
         Random rnd = new Random();
         for (long nEvents = 0; nEvents < events; nEvents++) {
-            Invoice order = InvoiceGenerator.getNextRandomInvoice();
+            Invoice invoice = InvoiceGenerator.getNextRandomInvoice();
 
-            // Using IP as key, so events from same IP will go to same partition
-            ProducerRecord<String, Invoice> record = new ProducerRecord<String, Invoice>(topic, order.getId().toString(), order);
+            // Invoice ID as key
+            ProducerRecord<String, Invoice> record = new ProducerRecord<String, Invoice>(topic,
+                                                                            invoice.getState(),
+                                                                            invoice);
             producer.send(record).get();
-            System.out.println("Sent ProductOrder" + order);
+            System.out.println("Sent Invoice" + invoice);
             Thread.sleep(5000);
         }
 

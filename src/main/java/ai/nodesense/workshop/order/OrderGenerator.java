@@ -1,5 +1,7 @@
 package ai.nodesense.workshop.order;
 
+import ai.nodesense.workshop.models.Order;
+
 import java.util.Random;
 
 

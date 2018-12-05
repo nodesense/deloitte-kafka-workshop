@@ -1,5 +1,6 @@
 package ai.nodesense.workshop.order;
 
+import ai.nodesense.workshop.models.Order;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;

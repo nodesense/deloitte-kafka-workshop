@@ -1,5 +1,6 @@
 package ai.nodesense.workshop.order;
 
+import ai.nodesense.workshop.models.Order;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;

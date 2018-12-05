@@ -1,3 +1,4 @@
+// InvoiceGenerator.java
 package ai.nodesense.workshop.invoice;
 
 import java.util.Random;
@@ -8,13 +9,12 @@ import java.util.Random;
 import java.util.UUID;
 
 
+// Helper to create a invoice randomly
 public class InvoiceGenerator {
     static Random random = new Random();
     static int[] categories = {1, 2, 3, 4};
     static int[] customerIds = {1000, 2000, 3000, 4000, 5000, 6000};
     static String[] customerNames = {"Krish", "Gayathri", "Nila", "Venkat", "Hari", "Ravi"};
-    static String[] productNames = {"iPhone", "Moto G", "One Plus", "Samsung Nexus", "Google Pixel", "Vivo"};
-    static int[] productIds = {11, 22, 33, 44, 55, 66};
 
     static String[] stateIds = {"KA", "TN", "KL", "MH", "DL", "AP"};
 
@@ -24,13 +24,8 @@ public class InvoiceGenerator {
         String categoryId = "" + customerIds[random.nextInt(customerIds.length)];
         String stateId = "" + customerIds[random.nextInt(customerIds.length)];
 
-        String customerId = "" + random.nextInt(100);
+        String customerId = UUID.randomUUID().toString();
 
-        int productIndex = random.nextInt(productIds.length);
-
-        int productId = productIds[productIndex];
-
-        String productName = productNames[productIndex];
 
         String id = UUID.randomUUID().toString();
 
