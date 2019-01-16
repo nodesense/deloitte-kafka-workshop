@@ -14,7 +14,7 @@ import static java.util.Collections.singletonList;
 public class OrderConsumer {
 
     public static String BOOTSTRAP_SERVERS = "localhost:9092";
-    public static String TOPIC = "invoices";
+    public static String TOPIC = "orders";
 
     public static void main(String[] args) {
 

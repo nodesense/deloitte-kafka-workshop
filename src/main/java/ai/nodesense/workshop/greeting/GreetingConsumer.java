@@ -13,8 +13,13 @@ import static java.util.Collections.singletonList;
 
 public class GreetingConsumer {
 
-    public static String BOOTSTRAP_SERVERS = "localhost:9092";
-    public static String TOPIC = "greetings";
+//    public static String BOOTSTRAP_SERVERS = "localhost:9092";
+//    public static String TOPIC = "greetings";
+
+    public static String BOOTSTRAP_SERVERS = "116.203.31.40:9092";
+    public static String TOPIC = "gopal-file-topic";
+
+
 
     public static void main(String[] args) {
 

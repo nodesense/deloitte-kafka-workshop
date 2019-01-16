@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Order extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -8170338860572382825L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Order\",\"namespace\":\"ai.nodesense.workshop.models\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"name\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"qty\",\"type\":\"int\"},{\"name\":\"price\",\"type\":\"int\"},{\"name\":\"category\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"invoiceId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"customerId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"state\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"country\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"orderDate\",\"type\":\"long\",\"logicalType\":\"Timestamp\"}]}");
+  private static final long serialVersionUID = 8211333815481861325L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Order\",\"namespace\":\"ai.nodesense.workshop.models\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"name\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"qty\",\"type\":\"int\"},{\"name\":\"price\",\"type\":\"int\"},{\"name\":\"category\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"invoiceId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"customerId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"state\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"country\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"region\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"orderDate\",\"type\":\"long\",\"logicalType\":\"Timestamp\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -60,6 +60,7 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
   @Deprecated public java.lang.String customerId;
   @Deprecated public java.lang.String state;
   @Deprecated public java.lang.String country;
+  @Deprecated public java.lang.String region;
   @Deprecated public long orderDate;
 
   /**
@@ -80,9 +81,10 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
    * @param customerId The new value for customerId
    * @param state The new value for state
    * @param country The new value for country
+   * @param region The new value for region
    * @param orderDate The new value for orderDate
    */
-  public Order(java.lang.String id, java.lang.String name, java.lang.Integer qty, java.lang.Integer price, java.lang.String category, java.lang.String invoiceId, java.lang.String customerId, java.lang.String state, java.lang.String country, java.lang.Long orderDate) {
+  public Order(java.lang.String id, java.lang.String name, java.lang.Integer qty, java.lang.Integer price, java.lang.String category, java.lang.String invoiceId, java.lang.String customerId, java.lang.String state, java.lang.String country, java.lang.String region, java.lang.Long orderDate) {
     this.id = id;
     this.name = name;
     this.qty = qty;
@@ -92,6 +94,7 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
     this.customerId = customerId;
     this.state = state;
     this.country = country;
+    this.region = region;
     this.orderDate = orderDate;
   }
 
@@ -108,7 +111,8 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
     case 6: return customerId;
     case 7: return state;
     case 8: return country;
-    case 9: return orderDate;
+    case 9: return region;
+    case 10: return orderDate;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -126,7 +130,8 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
     case 6: customerId = (java.lang.String)value$; break;
     case 7: state = (java.lang.String)value$; break;
     case 8: country = (java.lang.String)value$; break;
-    case 9: orderDate = (java.lang.Long)value$; break;
+    case 9: region = (java.lang.String)value$; break;
+    case 10: orderDate = (java.lang.Long)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -276,6 +281,22 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
   }
 
   /**
+   * Gets the value of the 'region' field.
+   * @return The value of the 'region' field.
+   */
+  public java.lang.String getRegion() {
+    return region;
+  }
+
+  /**
+   * Sets the value of the 'region' field.
+   * @param value the value to set.
+   */
+  public void setRegion(java.lang.String value) {
+    this.region = value;
+  }
+
+  /**
    * Gets the value of the 'orderDate' field.
    * @return The value of the 'orderDate' field.
    */
@@ -332,6 +353,7 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
     private java.lang.String customerId;
     private java.lang.String state;
     private java.lang.String country;
+    private java.lang.String region;
     private long orderDate;
 
     /** Creates a new Builder */
@@ -381,9 +403,13 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
         this.country = data().deepCopy(fields()[8].schema(), other.country);
         fieldSetFlags()[8] = true;
       }
-      if (isValidValue(fields()[9], other.orderDate)) {
-        this.orderDate = data().deepCopy(fields()[9].schema(), other.orderDate);
+      if (isValidValue(fields()[9], other.region)) {
+        this.region = data().deepCopy(fields()[9].schema(), other.region);
         fieldSetFlags()[9] = true;
+      }
+      if (isValidValue(fields()[10], other.orderDate)) {
+        this.orderDate = data().deepCopy(fields()[10].schema(), other.orderDate);
+        fieldSetFlags()[10] = true;
       }
     }
 
@@ -429,9 +455,13 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
         this.country = data().deepCopy(fields()[8].schema(), other.country);
         fieldSetFlags()[8] = true;
       }
-      if (isValidValue(fields()[9], other.orderDate)) {
-        this.orderDate = data().deepCopy(fields()[9].schema(), other.orderDate);
+      if (isValidValue(fields()[9], other.region)) {
+        this.region = data().deepCopy(fields()[9].schema(), other.region);
         fieldSetFlags()[9] = true;
+      }
+      if (isValidValue(fields()[10], other.orderDate)) {
+        this.orderDate = data().deepCopy(fields()[10].schema(), other.orderDate);
+        fieldSetFlags()[10] = true;
       }
     }
 
@@ -785,6 +815,45 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
     }
 
     /**
+      * Gets the value of the 'region' field.
+      * @return The value.
+      */
+    public java.lang.String getRegion() {
+      return region;
+    }
+
+    /**
+      * Sets the value of the 'region' field.
+      * @param value The value of 'region'.
+      * @return This builder.
+      */
+    public ai.nodesense.workshop.models.Order.Builder setRegion(java.lang.String value) {
+      validate(fields()[9], value);
+      this.region = value;
+      fieldSetFlags()[9] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'region' field has been set.
+      * @return True if the 'region' field has been set, false otherwise.
+      */
+    public boolean hasRegion() {
+      return fieldSetFlags()[9];
+    }
+
+
+    /**
+      * Clears the value of the 'region' field.
+      * @return This builder.
+      */
+    public ai.nodesense.workshop.models.Order.Builder clearRegion() {
+      region = null;
+      fieldSetFlags()[9] = false;
+      return this;
+    }
+
+    /**
       * Gets the value of the 'orderDate' field.
       * @return The value.
       */
@@ -798,9 +867,9 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public ai.nodesense.workshop.models.Order.Builder setOrderDate(long value) {
-      validate(fields()[9], value);
+      validate(fields()[10], value);
       this.orderDate = value;
-      fieldSetFlags()[9] = true;
+      fieldSetFlags()[10] = true;
       return this;
     }
 
@@ -809,7 +878,7 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'orderDate' field has been set, false otherwise.
       */
     public boolean hasOrderDate() {
-      return fieldSetFlags()[9];
+      return fieldSetFlags()[10];
     }
 
 
@@ -818,7 +887,7 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public ai.nodesense.workshop.models.Order.Builder clearOrderDate() {
-      fieldSetFlags()[9] = false;
+      fieldSetFlags()[10] = false;
       return this;
     }
 
@@ -836,7 +905,8 @@ public class Order extends org.apache.avro.specific.SpecificRecordBase implement
         record.customerId = fieldSetFlags()[6] ? this.customerId : (java.lang.String) defaultValue(fields()[6]);
         record.state = fieldSetFlags()[7] ? this.state : (java.lang.String) defaultValue(fields()[7]);
         record.country = fieldSetFlags()[8] ? this.country : (java.lang.String) defaultValue(fields()[8]);
-        record.orderDate = fieldSetFlags()[9] ? this.orderDate : (java.lang.Long) defaultValue(fields()[9]);
+        record.region = fieldSetFlags()[9] ? this.region : (java.lang.String) defaultValue(fields()[9]);
+        record.orderDate = fieldSetFlags()[10] ? this.orderDate : (java.lang.Long) defaultValue(fields()[10]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

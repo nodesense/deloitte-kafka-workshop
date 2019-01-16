@@ -37,16 +37,20 @@ public class EmailJsonDeserializer implements Deserializer<Email> {
         if (bytes == null)
             return null;
 
-         Email email;
+         Email email = null;
         try {
             System.out.println("Bytes received " +  new String(bytes, StandardCharsets.UTF_8));
             //System.out.println("Class is " + SMS.toString());
 
+            String o = new String(bytes, StandardCharsets.UTF_8).trim();
+            System.out.println("Clean data " + o);
+
             // convert bytes to Email Object
-            email = objectMapper.readValue(bytes, Email.class);
+            email = objectMapper.readValue(o.getBytes(), Email.class);
         } catch (Exception e) {
             System.out.println("Error while parsing ");
-            throw new SerializationException(e);
+
+            //throw new SerializationException(e);
         }
 
         return email;

@@ -17,24 +17,24 @@ import java.util.concurrent.ExecutionException;
 
 
 public class InvoiceProducer {
+    public static String BOOTSTRAP_SERVERS = "116.203.31.40:9092";
+    // FIXME: Always check
+    public static String SCHEMA_REGISTRY = "http://116.203.31.40:8081"; //default
+    public static String TOPIC = "invoices";
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
-        long events = 1000;
-        // FIXME: Always check
-        String schemaUrl = "http://localhost:8081"; //default
-        //String schemaUrl = "http://localhost:8091";
+        long events = 100;
+
 
         Properties props = new Properties();
         // hardcoding the Kafka server URI for this example
-        props.put("bootstrap.servers", "localhost:9092");
+        props.put("bootstrap.servers", BOOTSTRAP_SERVERS);
         props.put("acks", "all");
         props.put("retries", 0);
         props.put("key.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer");
         props.put("value.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer");
-        props.put("schema.registry.url", schemaUrl);
-
-        String topic = "invoices";
+        props.put("schema.registry.url", SCHEMA_REGISTRY);
 
         Producer<String, Invoice> producer = new KafkaProducer<String, Invoice>(props);
 
@@ -43,12 +43,12 @@ public class InvoiceProducer {
             Invoice invoice = InvoiceGenerator.getNextRandomInvoice();
 
             // Invoice ID as key
-            ProducerRecord<String, Invoice> record = new ProducerRecord<String, Invoice>(topic,
+            ProducerRecord<String, Invoice> record = new ProducerRecord<String, Invoice>(TOPIC,
                                                                             invoice.getState(),
                                                                             invoice);
             producer.send(record).get();
             System.out.println("Sent Invoice" + invoice);
-            Thread.sleep(2500);
+            Thread.sleep(5000);
         }
 
     }

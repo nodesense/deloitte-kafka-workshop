@@ -11,6 +11,7 @@
      {"name": "customerId", "type": "string"},
      {"name": "state", "type": "string"},
      {"name": "country", "type": "string"},
+     {"name": "region", "type": "string"},
      {"name": "orderDate", "type": "long", "logicalType": "Timestamp"}
  ]
 }

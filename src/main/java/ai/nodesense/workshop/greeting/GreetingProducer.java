@@ -12,7 +12,9 @@ import static org.apache.kafka.streams.StreamsConfig.BOOTSTRAP_SERVERS_CONFIG;
 import static org.apache.kafka.streams.StreamsConfig.RETRIES_CONFIG;
 
 public class GreetingProducer {
-    public static String BOOTSTRAP_SERVERS = "localhost:9092";
+    public static String BOOTSTRAP_SERVERS = "116.203.31.40:9092";
+
+    //public static String BOOTSTRAP_SERVERS = "localhost:9092";
     public static String TOPIC = "greetings";
 
 
@@ -42,7 +44,7 @@ public class GreetingProducer {
 
         Properties props = new Properties();
 
-        props.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(ACKS_CONFIG, "all");
         props.put(RETRIES_CONFIG, 0);
         props.put(BATCH_SIZE_CONFIG, 16000);

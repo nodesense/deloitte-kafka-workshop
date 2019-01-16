@@ -16,10 +16,14 @@ import static java.time.Duration.ofSeconds;
 public class EmailConsumer {
     public static String TOPIC = "emails";
 
+    // public static String BOOTSTRAP_SERVERS = "localhost:9092";
+    public static String BOOTSTRAP_SERVERS = "116.203.31.40:9092";
+
+
     public static void main(String[] args) throws Exception{
 
         Properties props = new Properties();
-        props.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(GROUP_ID_CONFIG, "email-consumer");
         props.put(ENABLE_AUTO_COMMIT_CONFIG, "true");
         props.put(AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
@@ -44,6 +48,9 @@ public class EmailConsumer {
 
             for (ConsumerRecord<String, Email> record : records) {
                  Email email = record.value();
+
+                 if (email == null)
+                     continue;
 
                 System.out.printf("Email received %s %s %s",
                                             email.getId(),

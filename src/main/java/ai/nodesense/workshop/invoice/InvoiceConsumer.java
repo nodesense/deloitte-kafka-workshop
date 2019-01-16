@@ -13,15 +13,18 @@ import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
 import static java.util.Collections.singletonList;
 
 public class InvoiceConsumer {
-
-    public static String BOOTSTRAP_SERVERS = "localhost:9092";
     public static String TOPIC = "invoices";
+
+    //public static String BOOTSTRAP_SERVERS = "localhost:9092";
+    // FIXME: Always check
+    //public static String SCHEMA_REGISTRY = "http://localhost:8091"; //default
+    //public static String SCHEMA_REGISTRY = "http://localhost:8081"; //default
+    public static String BOOTSTRAP_SERVERS = "116.203.30.219:9092";
+    // FIXME: Always check
+    public static String SCHEMA_REGISTRY = "http://116.203.30.219:8081"; //default
 
     public static void main(String[] args) {
 
-        // FIXME: Always check
-        String schemaUrl = "http://localhost:8081"; //default
-        //String schemaUrl = "http://localhost:8091";
 
         Properties props = new Properties();
         props.put(BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
@@ -31,7 +34,7 @@ public class InvoiceConsumer {
         props.put(SESSION_TIMEOUT_MS_CONFIG, "30000");
         props.put(KEY_DESERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroDeserializer");
         props.put(VALUE_DESERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroDeserializer");
-        props.put("schema.registry.url", schemaUrl);
+        props.put("schema.registry.url", SCHEMA_REGISTRY);
 
         // <Key as string, Value as string>
         KafkaConsumer<String, Invoice> consumer = new KafkaConsumer<>(props);

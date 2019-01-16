@@ -18,12 +18,16 @@ import static org.apache.kafka.clients.producer.ProducerConfig.*;
 public class EmailProducer {
 
     public static String TOPIC = "emails";
+   // public static String BOOTSTRAP_SERVERS = "localhost:9092";
+    public static String BOOTSTRAP_SERVERS = "116.203.30.219:9092";
+
+
     public static void main(String[] args) throws Exception {
 
 
         Properties props = new Properties();
 
-        props.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(ACKS_CONFIG, "all");
         props.put(RETRIES_CONFIG, 0);
         props.put(BATCH_SIZE_CONFIG, 16000);
@@ -40,7 +44,7 @@ public class EmailProducer {
         long t1 = System.currentTimeMillis();
 
         int i = 0;
-        for(; i < 1; i++) {
+        for(; i < 10000; i++) {
 
             String key = String.valueOf(round(random() * 1000));
 

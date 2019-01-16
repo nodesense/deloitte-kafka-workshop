@@ -32,6 +32,17 @@ public class OrderProducer {
         Random rnd = new Random();
         for (long nEvents = 0; nEvents < events; nEvents++) {
             Order order = OrderGenerator.getNextRandomOrder();
+            order.setRegion("South");
+            order.setName("Phone 2");
+            order.setId("1235");
+            order.setCategory("Mobile");
+            order.setOrderDate(1234124132341L);
+            order.setCustomerId("234");
+            order.setCountry("IN");
+            order.setState("UP");
+            order.setInvoiceId("1234556");
+            order.setPrice(25);
+            order.setQty(4);
 
             // Using IP as key, so events from same IP will go to same partition
             ProducerRecord<String, Order> record = new ProducerRecord<String, Order>(topic, order.getId().toString(), order);
