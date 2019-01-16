@@ -1,24 +1,32 @@
 package ai.nodesense.workshop;
 
-        import java.util.HashMap;
-        import java.util.HashSet;
-        import java.util.Arrays;
-        import java.util.Map;
-        import java.util.Set;
-        import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
-        import scala.Tuple2;
+import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.StreamingContext;
+import org.apache.spark.streaming.kafka010.ConsumerStrategies;
+import org.apache.spark.streaming.kafka010.KafkaUtils;
+import org.apache.spark.streaming.kafka010.LocationStrategies;
+import scala.Tuple2;
 
-        import org.apache.kafka.clients.consumer.ConsumerConfig;
-        import org.apache.kafka.clients.consumer.ConsumerRecord;
-        import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.serialization.StringDeserializer;
 
-        import org.apache.spark.SparkConf;
-        import org.apache.spark.streaming.api.java.*;
-        import org.apache.spark.streaming.kafka010.ConsumerStrategies;
-        import org.apache.spark.streaming.kafka010.KafkaUtils;
-        import org.apache.spark.streaming.kafka010.LocationStrategies;
-        import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.kafka010.ConsumerStrategies;
+import org.apache.spark.streaming.kafka010.KafkaUtils;
+import org.apache.spark.streaming.kafka010.LocationStrategies;
+
+
+import org.apache.spark.SparkConf;
+import org.apache.spark.streaming.api.java.*;
+import org.apache.spark.streaming.Durations;
+
 
 /**
  * Consumes messages from one or more topics in Kafka and does wordcount.
@@ -59,7 +67,9 @@ public final class SparkKafkaWordCount {
                                 .setMaster("local[1]")
                                 .setAppName("JavaDirectKafkaWordCount");
 
-    JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, Durations.seconds(2));
+    JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, Durations.seconds(10));
+
+    jssc.sparkContext().setLogLevel("warn");
 
     Set<String> topicsSet = new HashSet<>(Arrays.asList(topics.split(",")));
     Map<String, Object> kafkaParams = new HashMap<>();
@@ -69,6 +79,7 @@ public final class SparkKafkaWordCount {
     kafkaParams.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
     // Create direct kafka stream with brokers and topics
+    // Consumer API
     JavaInputDStream<ConsumerRecord<String, String>> messages = KafkaUtils.createDirectStream(
             jssc,
             LocationStrategies.PreferConsistent(),
@@ -76,14 +87,31 @@ public final class SparkKafkaWordCount {
 
     // Get the lines, split them into words, count the words and print
     JavaDStream<String> lines = messages.map(ConsumerRecord::value)
-                                         .map (v -> {
-                                             System.out.println("Word is " + v);
-                                             return v;
+                                         .map (line -> {
+                                             System.out.println("Line Msg is " + line);
+                                             return line;
                                          });
+//
+// convert message into word array
     JavaDStream<String> words = lines.flatMap(x -> Arrays.asList(SPACE.split(x)).iterator());
+
+    // Input
+
+    // hello - 1
+    // world - 1
+    // hello - 1
+    // hello - 1
+
+        // Output
+        // hello - 3
+
+        // (hello, 3)
+        // (world, 1)
+
     JavaPairDStream<String, Integer> wordCounts = words.mapToPair(s -> new Tuple2<>(s, 1))
             .reduceByKey((i1, i2) -> i1 + i2);
-    wordCounts.print();
+
+    // wordCounts.print();
 
     messages.foreachRDD(r -> {
         System.out.println("*** got an RDD, size = " + r.count());
@@ -96,7 +124,7 @@ public final class SparkKafkaWordCount {
             r.glom().foreach(a -> System.out.println("*** partition size = " + a.size()));
         }
     });
-
+//
 
         wordCounts.foreachRDD(r -> {
         System.out.println("*** Word Count got an RDD, size = " + r.count());
@@ -106,7 +134,10 @@ public final class SparkKafkaWordCount {
             // to do with the number of partitions in the RDD used to publish the data (4), nor
             // the number of partitions of the topic (which also happens to be four.)
             System.out.println("*** Word Count" + r.getNumPartitions() + " partitions");
-            r.glom().foreach(a -> System.out.println("*** partition size = " + a.size()));
+            r.glom().foreach(a -> {
+                System.out.println("*** partition size = " + a.size());
+                System.out.println("Values " + a);
+            });
         }
     });
 

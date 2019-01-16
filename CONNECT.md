@@ -65,7 +65,7 @@ hdfs dfs -get /topics/test_hdfs/partition=0/test_hdfs+0+0000000000+0000000002.av
 
 for i in {4..1000}; do echo "log line $i"; done >> test.txt
 
-unload connectots
+unload connectors
 
 confluent unload file-source
 confluent unload file-sink
